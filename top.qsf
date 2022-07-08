@@ -1,0 +1,352 @@
+# -------------------------------------------------------------------------- #
+#
+# Copyright (C) 2017  Intel Corporation. All rights reserved.
+# Your use of Intel Corporation's design tools, logic functions
+# and other software and tools, and its AMPP partner logic
+# functions, and any output files from any of the foregoing
+# (including device programming or simulation files), and any
+# associated documentation or information are expressly subject
+# to the terms and conditions of the Intel Program License
+# Subscription Agreement, the Intel Quartus Prime License Agreement,
+# the Intel FPGA IP License Agreement, or other applicable license
+# agreement, including, without limitation, that your use is for
+# the sole purpose of programming logic devices manufactured by
+# Intel and sold by Intel or its authorized distributors.  Please
+# refer to the applicable agreement for further details.
+#
+# -------------------------------------------------------------------------- #
+#
+# Quartus Prime
+# Version 17.1.0 Build 590 10/25/2017 SJ Lite Edition
+# Date created = 21:09:44  August 12, 2021
+#
+# -------------------------------------------------------------------------- #
+#
+# Notes:
+#
+# 1) The default values for assignments are stored in the file:
+#		top_assignment_defaults.qdf
+#    If this file doesn't exist, see file:
+#		assignment_defaults.qdf
+#
+# 2) Altera recommends that you do not modify this file. This
+#    file is updated automatically by the Quartus Prime software
+#    and any changes you make may be lost or overwritten.
+#
+# -------------------------------------------------------------------------- #
+
+
+set_global_assignment -name FAMILY "Cyclone 10 LP"
+set_global_assignment -name DEVICE 10CL025YU256C8G
+set_global_assignment -name TOP_LEVEL_ENTITY top
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 17.1.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "21:09:44  AUGUST 12, 2021"
+set_global_assignment -name LAST_QUARTUS_VERSION "17.1.0 Lite Edition"
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
+set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (Verilog)"
+set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
+
+###############################################################################
+# internal perepherials
+
+set_location_assignment PIN_M2 -to clk_12m_i
+
+set_location_assignment PIN_M6 -to cyc1000_led_o[0]
+set_location_assignment PIN_T4 -to cyc1000_led_o[1]
+set_location_assignment PIN_T3 -to cyc1000_led_o[2]
+set_location_assignment PIN_R3 -to cyc1000_led_o[3]
+set_location_assignment PIN_T2 -to cyc1000_led_o[4]
+set_location_assignment PIN_R4 -to cyc1000_led_o[5]
+set_location_assignment PIN_N5 -to cyc1000_led_o[6]
+set_location_assignment PIN_N3 -to cyc1000_led_o[7]
+
+set_location_assignment PIN_N6 -to cyc1000_button_i
+
+
+###############################################################################
+# SDRAM
+
+set_location_assignment PIN_A3 -to a_o[0]
+set_location_assignment PIN_B5 -to a_o[1]
+set_location_assignment PIN_B4 -to a_o[2]
+set_location_assignment PIN_B3 -to a_o[3]
+set_location_assignment PIN_C3 -to a_o[4]
+set_location_assignment PIN_D3 -to a_o[5]
+set_location_assignment PIN_E6 -to a_o[6]
+set_location_assignment PIN_E7 -to a_o[7]
+set_location_assignment PIN_D6 -to a_o[8]
+set_location_assignment PIN_D8 -to a_o[9]
+set_location_assignment PIN_A5 -to a_o[10]
+set_location_assignment PIN_E8 -to a_o[11]
+set_location_assignment PIN_A2 -to a_o[12]
+set_location_assignment PIN_C6 -to a_o[13]
+set_location_assignment PIN_A4 -to bs_o[0]
+set_location_assignment PIN_B6 -to bs_o[1]
+set_location_assignment PIN_B10 -to dq_io[0]
+set_location_assignment PIN_A10 -to dq_io[1]
+set_location_assignment PIN_B11 -to dq_io[2]
+set_location_assignment PIN_A11 -to dq_io[3]
+set_location_assignment PIN_A12 -to dq_io[4]
+set_location_assignment PIN_D9 -to dq_io[5]
+set_location_assignment PIN_B12 -to dq_io[6]
+set_location_assignment PIN_C9 -to dq_io[7]
+set_location_assignment PIN_D11 -to dq_io[8]
+set_location_assignment PIN_E11 -to dq_io[9]
+set_location_assignment PIN_A15 -to dq_io[10]
+set_location_assignment PIN_E9 -to dq_io[11]
+set_location_assignment PIN_D14 -to dq_io[12]
+set_location_assignment PIN_F9 -to dq_io[13]
+set_location_assignment PIN_C14 -to dq_io[14]
+set_location_assignment PIN_A14 -to dq_io[15]
+set_location_assignment PIN_B13 -to dqm_o[0]
+set_location_assignment PIN_D12 -to dqm_o[1]
+set_location_assignment PIN_A6 -to cs_o
+set_location_assignment PIN_B7 -to ras_o
+set_location_assignment PIN_C8 -to cas_o
+set_location_assignment PIN_A7 -to we_o
+set_location_assignment PIN_F8 -to cke_o
+set_location_assignment PIN_B14 -to sdram_clk_o
+
+###############################################################################
+# connector perepherials
+
+set_location_assignment PIN_P11 -to user_led_o[3]
+set_location_assignment PIN_R12 -to user_led_o[4]
+set_location_assignment PIN_T13 -to user_led_o[2]
+set_location_assignment PIN_R13 -to user_led_o[1]
+
+#set_location_assignment PIN_T14 -to fake_load_o
+# set_location_assignment PIN_P14 -to                 # j1_connector_6   gpio5
+set_location_assignment PIN_R14 -to relay_o
+# set_location_assignment PIN_T15 -to                 # j1_connector_8   gpio7
+# set_location_assignment PIN_N16 -to                 # j1_connector_9   gpio8
+# set_location_assignment PIN_L15 -to                 # j1_connector_10  gpio9
+# set_location_assignment PIN_L16 -to                 # j1_connector_11  gpio10
+# set_location_assignment PIN_K15 -to                 # j1_connector_12  gpio11
+# set_location_assignment PIN_L16 -to                 # j1_connector_13  gpio12
+# set_location_assignment PIN_J14 -to                 # j1_connector_14  gpio13
+# set_location_assignment PIN_N2  -to                 # j2_connector_1   gpio14
+# set_location_assignment PIN_N1  -to                 # j2_connector_2   gpio15
+#set_location_assignment PIN_P2 -to tmp
+
+set_location_assignment PIN_R1 -to dac_mute_o
+
+set_location_assignment PIN_K1 -to D11_R
+set_location_assignment PIN_L1 -to D12_R
+
+set_location_assignment PIN_J1 -to i2s_din_o
+set_location_assignment PIN_J2 -to i2s_bclk_o
+set_location_assignment PIN_K2 -to pcm1808_sf1_o
+set_location_assignment PIN_L2 -to pcm1808_sf0_o
+set_location_assignment PIN_P1 -to pcm1808_fmt_o
+# set_location_assignment PIN_R1  -to                 # j2_connector_9   gpio22
+set_location_assignment PIN_F13 -to i2s_dout_i
+set_location_assignment PIN_F15 -to i2s_mclk_o
+set_location_assignment PIN_N2 -to i2s_lrclk_o
+set_location_assignment PIN_D16 -to i2c_sda_io
+set_location_assignment PIN_D15 -to sw_i[1]
+set_location_assignment PIN_B16 -to sw_i[3]
+set_location_assignment PIN_C15 -to sw_i[2]
+set_location_assignment PIN_C16 -to i2c_scl_o
+
+###############################################################################
+
+set_global_assignment -name IOBANK_VCCIO 3.3V -section_id 1
+set_global_assignment -name IOBANK_VCCIO 3.3V -section_id 2
+set_global_assignment -name IOBANK_VCCIO 3.3V -section_id 3
+set_global_assignment -name IOBANK_VCCIO 3.3V -section_id 4
+set_global_assignment -name IOBANK_VCCIO 3.3V -section_id 5
+set_global_assignment -name IOBANK_VCCIO 3.3V -section_id 6
+set_global_assignment -name IOBANK_VCCIO 3.3V -section_id 7
+set_global_assignment -name IOBANK_VCCIO 3.3V -section_id 8
+
+###############################################################################
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to a_o[*]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to bs_o[*]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dq_io[*]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to dqm_o[*]
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to cs_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to ras_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to cas_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to we_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to cke_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sdram_clk_o
+
+
+###############################################################################
+
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to clk_12m_i
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to cyc1000_led_o[*]
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to cyc1000_button_i
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to user_led_o[*]
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to relay_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to i2s_din_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to i2s_bclk_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to pcm1808_sf1_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to pcm1808_sf0_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to pcm1808_fmt_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to i2s_dout_i
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to i2s_lrclk_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to i2s_mclk_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to i2c_scl_o
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to sw_i[*]
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to i2c_sda_io
+
+#set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to fake_load_o
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to dac_mute_o
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to D11_R
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to D12_R
+
+set_instance_assignment -name PLL_COMPENSATION_MODE DIRECT -to "*sys_pll*|altera_pll:altera_pll_i*|*" -disable
+set_instance_assignment -name PLL_AUTO_RESET ON -to "*sys_pll*|altera_pll:altera_pll_i*|*" -disable
+set_instance_assignment -name PLL_BANDWIDTH_PRESET AUTO -to "*sys_pll*|altera_pll:altera_pll_i*|*" -disable
+set_instance_assignment -name PLL_COMPENSATION_MODE DIRECT -to "*sdram_pll*|altera_pll:altera_pll_i*|*"
+set_instance_assignment -name PLL_AUTO_RESET OFF -to "*sdram_pll*|altera_pll:altera_pll_i*|*"
+set_instance_assignment -name PLL_BANDWIDTH_PRESET AUTO -to "*sdram_pll*|altera_pll:altera_pll_i*|*"
+
+set_global_assignment -name SDC_FILE constraints.sdc
+
+
+
+
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name ENABLE_OCT_DONE OFF
+set_global_assignment -name STRATIXV_CONFIGURATION_SCHEME "PASSIVE SERIAL"
+set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
+set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
+set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
+
+
+
+###############################################################################
+# Do not stage for commit lines below
+
+
+
+
+
+
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name ENABLE_SIGNALTAP ON
+set_global_assignment -name USE_SIGNALTAP_FILE singen.stp
+
+
+
+set_global_assignment -name SIGNALTAP_FILE i2c.stp
+set_global_assignment -name SIGNALTAP_FILE output_files/i2s.stp
+set_global_assignment -name SIGNALTAP_FILE delay.stp
+
+
+
+
+set_global_assignment -name SIGNALTAP_FILE mem.stp
+set_global_assignment -name SIGNALTAP_FILE output_files/level_check.stp
+
+
+
+
+
+
+
+
+set_global_assignment -name SIGNALTAP_FILE output_files/switching.stp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+set_global_assignment -name SIGNALTAP_FILE singen.stp
+
+
+
+
+
+
+
+
+
+
+
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+set_global_assignment -name SYSTEMVERILOG_FILE main_config_pkg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/reverb_pkg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/board_memory/board_memory.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/board_memory/external_memory_if.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/board_memory/sdram_controller.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/board_memory/sdram_init.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/common/showahead_sc_fifo.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/common/avalon_st_if.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/common/avalon_mm_if.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/common/amm_simple_demux.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/i2c/i2c_core_pkg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/i2c/bit_operation.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/i2c/i2c_core.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/i2c/ads_i2c_routine.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/i2c/i2c_subsystem.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/i2s/i2s_channel.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/i2s/i2s_core.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/limiter.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/div2_and_sum.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/equal_mixer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/attenuator.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/low_pass_filter.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/application_core.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/delay.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/delay_reflections_pipeline.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/sum_and_limit.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/chorus.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/swell.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/sin_generator.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/switch_debouncer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/i2s/i2s_devices_ctrl.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/led_controller.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/system/sys_pll.sv
+set_global_assignment -name VERILOG_FILE rtl/system/sdram_pll.v
+set_global_assignment -name SYSTEMVERILOG_FILE top_wrapper.sv
+set_global_assignment -name SYSTEMVERILOG_FILE top.sv

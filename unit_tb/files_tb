@@ -1,0 +1,7 @@
+../main_config_pkg.sv
+../rtl/board_memory/external_memory_if.sv
+../rtl/crossfader.sv
+../rtl/attenuator.sv
+../rtl/low_pass_filter.sv
+../rtl/delay.sv
+../rtl/delay_reflections_pipeline.sv
