@@ -1,0 +1,11 @@
+db/
+incremental_db/
+output_files/
+simulation/
+stp1.stp
+tags
+top.qws
+unit_tb/transcript
+unit_tb/vsim.wlf
+unit_tb/wave.do
+unit_tb/work/
