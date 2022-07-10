@@ -39,7 +39,7 @@ module delay #(
   // this feature mute data from buffer immediately after changing
   // time parameter, then lineary unmute to prevent cut wave cracks
   parameter           UNMUTE_EN                 = 0,
-  parameter           UNMUTE_DEPTH              = 16,
+  parameter           UNMUTE_DEPTH              = 256,
   // What pointer to manipulate. Internal stuff for a developer
   parameter           ACTIVE_POINTER            = "READ"
 ) (

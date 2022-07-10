@@ -46,8 +46,8 @@ parameter MEM_ADDR_WIDTH = 20 - $clog2(NUM_MEMORY_MASTERS);
 
 // application core parts static on/off
 parameter DEBUG_RECORDER_EN = 0;
-parameter SWELL_EN          = 1;
-parameter DRIVE_EN          = 1;
+parameter SWELL_EN          = 0;
+parameter DRIVE_EN          = 0;
 parameter CHORUS_EN         = 1;
 parameter DELAY_EN          = 1;
 parameter REVERB_EN         = 0;

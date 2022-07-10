@@ -198,6 +198,7 @@ generate
   if( CHORUS_EN )
     begin : gen_chorus
       chorus #(
+        .DWIDTH           ( DATA_WIDTH                  ),
         .MIN_TIME         ( 'h370                       ),
         .MAX_TIME         ( 'h530                       )
       ) chorus (
