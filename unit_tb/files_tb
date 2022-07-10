@@ -3,5 +3,7 @@
 ../rtl/crossfader.sv
 ../rtl/attenuator.sv
 ../rtl/low_pass_filter.sv
+../rtl/sum_and_limit.sv
+../rtl/chorus.sv
 ../rtl/delay.sv
 ../rtl/delay_reflections_pipeline.sv

@@ -13,8 +13,8 @@ To cover system including perepherial interfaces infrostructure use system_tb
 Input file spec
 ---------------
 
-  - All vaues should be presented in 4 hex symbols, signed, little endian.
-    ( 7fff -- max possible value, 8000 -- min possible value ).
+  - All vaues should be presented in 4 or 6 hex symbols, signed, little endian.
+    ( 7fff / 7fffff -- max possible value, 8000 / 800000 -- min possible value ).
   - Onle line -- one value
   - Number of lines is not limited
 
@@ -36,7 +36,6 @@ it does
 KnownIssues
 -----------
 
-  - 16-bit hardcode
   - compile function compiles all files in files_tb, including not necessaty duts
 
 Authors
