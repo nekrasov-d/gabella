@@ -207,7 +207,6 @@ generate
         .sample_tick_i    ( sample_tick_i               ),
         .enable_i         ( right_button_effects        ),
         .level_i          ( knob_level_i[CHORUS]        ),
-        .max_time_i       (                             ),
         .depth_i          ( 8'h80                       ),
         .data_i           ( data_from_drive             ),
         .data_o           ( data_from_chorus            )
@@ -272,7 +271,7 @@ endgenerate
 generate
   if( REVERB_EN )
     begin : gen_reverb
-/*
+
       reverb #(
         .DWIDTH                  ( DATA_WIDTH            ),
         .NUM                     ( reverb_pkg::NUM       ),
@@ -300,7 +299,6 @@ generate
         .data_i                  ( data_from_delay       ),
         .data_o                  ( data_from_reverb      )
       );
-      */
     end // gen_reverb
   else
     begin : no_reverb

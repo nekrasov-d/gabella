@@ -24,10 +24,15 @@ rtl/attenuator.sv
 rtl/low_pass_filter.sv
 rtl/application_core.sv
 rtl/delay.sv
+rtl/reverb.sv
 
 rtl/delay_reflections_pipeline.sv
 
-rtl/sum_and_limit.sv
+rtl/fir_filter/ram.sv
+rtl/fir_filter/ram_fir.sv
+rtl/fir_filter/rom.sv
+
+rtl/sat_sum.sv
 rtl/chorus.sv
 rtl/swell.sv
 rtl/sin_generator.sv

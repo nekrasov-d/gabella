@@ -279,8 +279,8 @@ generate
     end // no_feedback
   else
     begin : with_feedback
-      assign mem_wrdata = data_i + delay;
-      assign data_o     = mem_wrdata;
+      sum_sat #( DWIDTH ) sum_output ( data_i, delay, mem_wrdata );
+      assign data_o     = enable_i ? mem_wrdata : data_i;
     end // with_feedback
 endgenerate
 

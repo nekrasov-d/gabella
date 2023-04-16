@@ -22,26 +22,14 @@ module attenuator #(
   parameter             DWIDTH = 16,
   parameter             MULT_W = 9
 ) (
-  input [DWIDTH-1:0]        data_signed_i,
-  input [MULT_W-1:0]        mult_i,
+  input signed [DWIDTH-1:0]        data_signed_i,
+  input signed [MULT_W-1:0]        mult_i,
   output logic [DWIDTH-1:0] data_o
 );
 
-logic        sign;
-logic [DWIDTH-2:0] magnitude;
+logic signed [DWIDTH+MULT_W-1:0] mult;
 
-logic [DWIDTH + MULT_W - 1 :0] mult_output;
-logic [DWIDTH-2:0]             output_magnitude;
-
-assign sign = data_signed_i[DWIDTH-1];
-
-assign magnitude = sign ? ~data_signed_i[DWIDTH-2:0] : data_signed_i[DWIDTH-2:0];
-
-assign mult_output = magnitude * mult_i;
-
-assign output_magnitude = mult_output >> (MULT_W-1);
-
-assign data_o[DWIDTH-1]   = sign;
-assign data_o[DWIDTH-2:0] = sign ? ~output_magnitude : output_magnitude;
+assign mult   = data_signed_i * mult_i;
+assign data_o = mult >> (MULT_W-1);
 
 endmodule

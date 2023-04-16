@@ -26,6 +26,8 @@ module chorus #(
   input               clk_i,
   input               srst_i,
   input               sample_tick_i,
+
+  external_memory_if  external_memory_if,
   input               enable_i,
 
   input [7:0]         level_i,
@@ -98,6 +100,7 @@ delay #(
   .clk_i               ( clk_i                       ),
   .srst_i              ( srst_i                      ),
   .sample_tick_i       ( sample_tick_i               ),
+  .external_memory_if  ( external_memory_if          ),
   .enable_i            ( 1'b1                        ),
   .level_i             ( level_i                     ),
   .time_i              ( delay_time                  ),
@@ -106,13 +109,7 @@ delay #(
   .data_o              ( delay_data                  )
 );
 
-sum_and_limit #(
-  .DWIDTH             ( DWIDTH               )
-) output_sum (
-  .data1_i            ( data_i               ),
-  .data2_i            ( delay_data           ),
-  .data_o             ( output_data          )
-);
+sum_sat #( DWIDTH ) sum_output ( data_i, delay_data, output_data );
 
 assign data_o = enable_i ? output_data : data_i;
 
