@@ -41,7 +41,7 @@ set_global_assignment -name DEVICE 10CL025YU256C8G
 set_global_assignment -name TOP_LEVEL_ENTITY top
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 17.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "21:09:44  AUGUST 12, 2021"
-set_global_assignment -name LAST_QUARTUS_VERSION "17.1.0 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
@@ -215,7 +215,6 @@ set_instance_assignment -name PLL_COMPENSATION_MODE DIRECT -to "*sdram_pll*|alte
 set_instance_assignment -name PLL_AUTO_RESET OFF -to "*sdram_pll*|altera_pll:altera_pll_i*|*"
 set_instance_assignment -name PLL_BANDWIDTH_PRESET AUTO -to "*sdram_pll*|altera_pll:altera_pll_i*|*"
 
-set_global_assignment -name SDC_FILE constraints.sdc
 
 
 
@@ -245,75 +244,81 @@ set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -
 
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name ENABLE_SIGNALTAP ON
-set_global_assignment -name USE_SIGNALTAP_FILE singen.stp
+set_global_assignment -name ENABLE_SIGNALTAP OFF
+set_global_assignment -name USE_SIGNALTAP_FILE output_files/stp1.stp
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST ON -section_id eda_simulation
+
+
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/sum_sat.sv
+set_global_assignment -name SDC_FILE constraints.sdc
 set_global_assignment -name SIGNALTAP_FILE i2c.stp
 set_global_assignment -name SIGNALTAP_FILE output_files/i2s.stp
 set_global_assignment -name SIGNALTAP_FILE delay.stp
-
-
-
-
 set_global_assignment -name SIGNALTAP_FILE mem.stp
 set_global_assignment -name SIGNALTAP_FILE output_files/level_check.stp
-
-
-
-
-
-
-
-
 set_global_assignment -name SIGNALTAP_FILE output_files/switching.stp
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 set_global_assignment -name SIGNALTAP_FILE singen.stp
-
-
-
-
-
-
-
-
-
-
-
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 set_global_assignment -name SYSTEMVERILOG_FILE main_config_pkg.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/reverb_pkg.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/board_memory/board_memory.sv
@@ -333,12 +338,17 @@ set_global_assignment -name SYSTEMVERILOG_FILE rtl/i2s/i2s_channel.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/i2s/i2s_core.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/limiter.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/div2_and_sum.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/equal_mixer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/crossfader.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/attenuator.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/low_pass_filter.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/application_core.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/delay.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/reverb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/delay_reflections_pipeline.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ram_fir/ram.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ram_fir/ram_fir.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ram_fir/rom.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/sat_sum.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/sum_and_limit.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/chorus.sv
 set_global_assignment -name SYSTEMVERILOG_FILE rtl/swell.sv
@@ -350,3 +360,5 @@ set_global_assignment -name SYSTEMVERILOG_FILE rtl/system/sys_pll.sv
 set_global_assignment -name VERILOG_FILE rtl/system/sdram_pll.v
 set_global_assignment -name SYSTEMVERILOG_FILE top_wrapper.sv
 set_global_assignment -name SYSTEMVERILOG_FILE top.sv
+set_global_assignment -name SIGNALTAP_FILE output_files/stp1.stp
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

@@ -48,4 +48,4 @@ D.Nekrasov
 License
 -------
 
-GNU GPL V3
+WTFPL V2

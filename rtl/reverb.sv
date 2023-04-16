@@ -1,19 +1,10 @@
 /*
  * Copyright (C) 2021 Dmitriy Nekrasov
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
+ * This work is free. You can redistribute it and/or modify it under the
+ * terms of the Do What The Fuck You Want To Public License, Version 2,
+ * as published by Sam Hocevar. See the COPYING file or http://www.wtfpl.net/
+ * for more details.
  *
  * XXX: add annotation
 */
@@ -22,6 +13,7 @@ module reverb #(
   parameter           NUM                   = 8,
   parameter reverb_pkg::reverb_refl_time_t DELAYS = '{default:0},
   parameter           MAX_REFLECTION_LENGTH = 8191,
+  parameter           DWIDTH                = 16,
   parameter           AWIDTH                = $clog2(MAX_REFLECTION_LENGTH),
   parameter           FILTER_EN             = 1,
   parameter           FILTER_DEPTH          = 16,
@@ -44,12 +36,16 @@ module reverb #(
 
   input [7:0]         post_delay_enable_i,
 
+  input [7:0]         post_delay_level_i,
+
   input [7:0]         level_i,
   input [7:0]         mix_i,
   input [15:0]        pre_delay_i,
   input [DWIDTH-1:0]        data_i,
   output logic [DWIDTH-1:0] data_o
 );
+
+localparam USE_EXTERNAL_MEMORY = 0;
 
 //**************************************************************************
 //**************************************************************************
@@ -72,7 +68,7 @@ initial
 // Pre-processing
 
 logic [DWIDTH-1:0] data_pre_delay;
-logic [DWIDTH-1:0] data_chorus;
+logic [DWIDTH-1:0] data_hipass;
 logic [15:0] refl_sum_attenuation;
 logic [DWIDTH-1:0] data_to_filter;
 
@@ -80,6 +76,7 @@ generate
   if( PRE_DELAY_EN )
     begin : gen_pre_delay
       delay #(
+        .DWIDTH        ( DWIDTH ),
         .USE_EXTERNAL_MEMORY ( 0 ),
         .AWIDTH        ( $clog2(MAX_PRE_DELAY) ),
         .FILTER_EN     ( 0                     ),
@@ -102,28 +99,37 @@ generate
     end // no_pre_delay
 endgenerate
 
-generate
-  if( CHORUS_EN )
-    begin : gen_chorus
-      chorus #(
-        .MIN_TIME         ( 'h370                       ),
-        .MAX_TIME         ( 'h530                       )
-      ) chorus (
-        .clk_i            ( clk_i                       ),
-        .srst_i           ( srst_i                      ),
-        .sample_tick_i    ( sample_tick_i               ),
-        .enable_i         ( 1'b1                        ),
-        .level_i          ( 8'd255                      ),
-        .depth_i          ( 8'h80                       ),
-        .data_i           ( data_pre_delay              ),
-        .data_o           ( data_chorus                 )
-      );
-    end // gen_chorus
-  else
-    begin : no_chorus
-      assign data_chorus = data_pre_delay;
-    end
-endgenerate
+logic [DWIDTH-1:0] foo, bar;
+
+
+ram_fir #(
+  .DWIDTH        ( DWIDTH                      ),
+  .LEN           ( 511                         ),
+  .COEFFS_FILE   ( "../ram_fir/fir_coeffs.mif"    )
+) hipass1 (
+  .clk_i         ( clk_i                       ),
+  .srst_i        ( srst_i                      ),
+  .sample_tick_i ( sample_tick_i               ),
+  .data_i        ( data_i              ),
+  //.data_o        ( data_hipass                 )
+  .data_o        ( foo                         )
+);
+
+ram_fir #(
+  .DWIDTH        ( DWIDTH                      ),
+  .LEN           ( 511                         ),
+  .COEFFS_FILE   ( "../ram_fir/fir_coeffs.mif"    )
+) hipass2 (
+  .clk_i         ( clk_i                       ),
+  .srst_i        ( srst_i                      ),
+  .sample_tick_i ( sample_tick_i               ),
+  .data_i        ( foo              ),
+  //.data_o        ( data_hipass                 )
+  .data_o        ( bar                         )
+);
+
+assign data_o = enable_i ? bar : data_i;
+
 
 //***************************************************************************
 //***************************************************************************
@@ -190,6 +196,12 @@ endgenerate
 logic [DWIDTH-1:0] feedback_data;
 
 logic mem_wrreq;
+logic [AWIDTH-1:0] rd_addr;
+logic [DWIDTH-1:0] mem_rddata;
+logic [DWIDTH-1:0] mem_rddata_local [NUM-1:0];
+
+
+
 
 assign mem_wrreq = sample_tick_i && enable_i;
 
@@ -206,6 +218,10 @@ generate
       assign main_memory_if.write_enable  = mem_wrreq;
       assign main_memory_if.write_address = wr_addr;
       assign main_memory_if.writedata     = feedback_data;
+
+      assign main_memory_if.read_address = rd_addr_local[rd_counter];
+      assign mem_rddata                  = main_memory_if.readdata;
+
     end // external_mem
   else
     begin : internal_mem
@@ -215,6 +231,11 @@ generate
       always_ff @( posedge clk_i )
         if( mem_wrreq )
           mem[wr_addr] <= feedback_data;
+
+
+      always @( posedge clk_i )
+        mem_rddata <= mem[rd_addr];
+
     end // internal_mem
 endgenerate
 
@@ -226,9 +247,6 @@ logic [$clog2(NUM)-1:0] rd_counter;
 
 logic read_cycle_en;
 
-logic [AWIDTH-1:0] rd_addr;
-logic [DWIDTH-1:0] mem_rddata;
-logic [DWIDTH-1:0] mem_rddata_local [NUM-1:0];
 
 always_ff @( posedge clk_i )
   if( srst_i )
@@ -263,18 +281,6 @@ always_ff @( posedge clk_i )
 always_ff @( posedge clk_i )
   rd_addr <= rd_addr_local[rd_counter];
 
-generate
-  if( USE_EXTERNAL_MEMORY )
-    begin : readdata_external
-      main_memory_if.read_address = rd_addr_local[rd_counter];
-      mem_rddata                  = main_memory_if.readdata;
-    end // readdata_external
-  else
-    begin : readdata_internal
-      always @( posedge clk_i )
-        mem_rddata <= mem[rd_addr];
-    end // readdata_internal
-endgenerate
 
 always_ff @( posedge clk_i )
   for( int j = 0; j < NUM; j++ )
@@ -330,32 +336,29 @@ assign refl_sum_attenuation = refl_sum[DWIDTH-1+EXT_BITS] ?
                                   {1'b1, refl_sum[DWIDTH-2+EXT_BITS:EXT_BITS]} :
                                   {1'b0, refl_sum[DWIDTH-2+EXT_BITS:EXT_BITS]};
 
-sum_and_limit mix_feedback(
-  .data1_i            ( refl_sum_attenuation ),
-  .data2_i            ( data_chorus          ),
-  .data_o             ( data_to_filter       )
-);
 
-generate
-  if( FILTER_EN )
-    begin : gen_filter
-      low_pass_filter #(
-        .DWIDTH            ( DWIDTH               ),
-        .DEPTH             ( FILTER_DEPTH         )
-      ) filter (
-        .clk_i             ( clk_i                ),
-        .srst_i            ( srst_i               ),
-        .sample_tick_i     ( sample_tick_i        ),
-        .enable_i          ( 1'b1                 ),
-        .data_i            ( data_to_filter       ),
-        .data_o            ( feedback_data        )
-      );
-    end // gen_filter
-  else
-    begin : no_filter
-      assign feedback_data = data_to_filter;
-    end // no_filter
-endgenerate
+sum_sat #( DWIDTH ) mix_fb ( refl_sum_attenuation, data_chorus, feedback_data );
+
+//generate
+//  if( FILTER_EN )
+//    begin : gen_filter
+//      low_pass_filter #(
+//        .DWIDTH            ( DWIDTH               ),
+//        .DEPTH             ( FILTER_DEPTH         )
+//      ) filter (
+//        .clk_i             ( clk_i                ),
+//        .srst_i            ( srst_i               ),
+//        .sample_tick_i     ( sample_tick_i        ),
+//        .enable_i          ( 1'b1                 ),
+//        .data_i            ( data_to_filter       ),
+//        .data_o            ( feedback_data        )
+//      );
+//    end // gen_filter
+//  else
+//    begin : no_filter
+//      assign feedback_data = data_to_filter;
+//    end // no_filter
+//endgenerate
 
 //***************************************************************************
 // OUTPUT
@@ -368,30 +371,30 @@ assign wet = refl_sum[DWIDTH-1+EXT_BITS] ? { 1'b1, refl_sum[DWIDTH-2:0] } :
 
 logic [DWIDTH-1:0] post_delay_wet;
 
-post_delay post_delay #(
-  .DWIDTH              ( DWIDTH                                ),
-  .POST_DELAY_TIME     ( POST_DELAY_TIME                       ),
-  .USE_EXTERNAL_MEMORY ( USE_EXTERNAL_MEMORY                   )
-) post_delay (
-  .clk_i                ( clk_i                                ),
-  .srst_i               ( srst_i                               ),
-  .sample_tick_i        ( sample_tick_i                        ),
-  .external_memory_0_if ( post_delay_0_memory_if               ),
-  .external_memory_1_if ( post_delay_1_memory_if               ),
-  .external_memory_2_if ( post_delay_2_memory_if               ),
-  .external_memory_3_if ( post_delay_3_memory_if               ),
-  .data_i               ( wet                                  ),
-  .data_o               ( post_delay_wet                       )
-);
+//post_delay post_delay #(
+//  .DWIDTH              ( DWIDTH                                ),
+//  .POST_DELAY_TIME     ( POST_DELAY_TIME                       ),
+//  .USE_EXTERNAL_MEMORY ( USE_EXTERNAL_MEMORY                   )
+//) post_delay (
+//  .clk_i                ( clk_i                                ),
+//  .srst_i               ( srst_i                               ),
+//  .sample_tick_i        ( sample_tick_i                        ),
+//  .external_memory_0_if ( post_delay_0_memory_if               ),
+//  .external_memory_1_if ( post_delay_1_memory_if               ),
+//  .external_memory_2_if ( post_delay_2_memory_if               ),
+//  .external_memory_3_if ( post_delay_3_memory_if               ),
+//  .data_i               ( wet                                  ),
+//  .data_o               ( post_delay_wet                       )
+//);
 
 
-crossfader #(
-  .DWIDTH             ( DWIDTH                )
-) mix_output (
-  .data_1_i           ( data_i                ),
-  .data_2_i           ( post_delay_wet        ),
-  .level_i            ( enable_i ? mix_i : '0 ),
-  .data_o             ( data_o                )
-);
+//crossfader #(
+//  .DWIDTH             ( DWIDTH                )
+//) mix_output (
+//  .data_1_i           ( data_i                ),
+//  .data_2_i           ( post_delay_wet        ),
+//  .level_i            ( enable_i ? mix_i : '0 ),
+//  .data_o             ( data_o                )
+//);
 
 endmodule

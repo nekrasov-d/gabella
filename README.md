@@ -107,4 +107,4 @@ Dmitriy Nekrasov
 License
 -------
 
-GNU GPL v3
+WTFPL v2
