@@ -80,7 +80,12 @@ logic [23:0] data_out_lim;
 logic [23:0] data_from_app_core;
 logic        sample_tick;
 
-
+//*************************************************************
+// It seems that DAC is kinda overdriven, so I had to attenuate output signal
+// 8 times to stop hear some noise
+logic [23:0] data_out_attenuated;
+always_ff @( posedge clk_i )
+  data_out_attenuated = { {4{data_out_lim[23]}}, data_out_lim[22:3] };
 
 i2s_core #(
   .DATA_WIDTH              ( DATA_WIDTH                  ),
@@ -96,7 +101,7 @@ i2s_core #(
   .i2s_lrclk_i             ( i2s_lrclk                   ),
   .i2s_data_i              ( i2s_dout                    ),
   .i2s_data_o              ( i2s_din                     ),
-  .left_data_i             ( data_out_lim                ),
+  .left_data_i             ( data_out_attenuated         ),
   .left_data_val_i         ( sample_tick                 ),
   .left_data_o             ( data_in                     ),
   .left_data_val_o         ( sample_tick                 )
@@ -116,10 +121,6 @@ always_ff @( posedge clk_i )
   else
     if( sample_tick )
       max <= magnitude > max ? magnitude : max;
-
-
-
-//assign data_out = data_in;
 
 assign
   knob_level_remap[0] = knob_level[7],
@@ -194,8 +195,6 @@ led_controller #(
   .data_i           ( data_from_app_core            ),
   .data_o           ( data_out                      )
 );
-
-
 
 limiter #(
   .DWIDTH          ( main_config::DATA_WIDTH  ),
