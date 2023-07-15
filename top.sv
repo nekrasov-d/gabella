@@ -121,7 +121,7 @@ logic [2:0] sw_debounced;
 
 switch_debouncer #(
   .NUM            ( 3            ),
-  .DEBOUNCE_DEPTH ( 20           )
+  .DEBOUNCE_DEPTH ( 22           )
 ) debouncer (
   .clk_i          ( sys_clk      ),
   .srst_i         ( sys_srst     ),
