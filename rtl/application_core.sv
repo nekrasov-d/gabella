@@ -130,6 +130,7 @@ logic [DATA_WIDTH-1:0] data_from_drive;
 logic [DATA_WIDTH-1:0] data_from_chorus;
 logic [DATA_WIDTH-1:0] data_from_delay;
 logic [DATA_WIDTH-1:0] data_from_reverb;
+logic [DATA_WIDTH-1:0] data_from_tremolo;
 
 generate
   if( SWELL_EN )
@@ -297,6 +298,33 @@ generate
     end
 endgenerate
 
-assign data_o = data_from_reverb;
+generate
+  if( TREMOLO_EN )
+    begin : gen_tremolo
+      tremolo #(
+        .DW                   ( DATA_WIDTH                            ),
+        .FREQ_TABLE_FILE      ( "rtl/tremolo/tremolo_frequency_table.mif" ),
+        .FREQ_DIVISOR_FACTOR  ( 2                                     )
+      ) trem (
+        .clk_i                ( clk_i                       ),
+        .srst_i               ( srst_i                      ),
+        .sample_tick_i        ( sample_tick_i               ),
+        .frequency_number_i   ( knob_level_i[TREM_SPEED]    ),
+        .level_i              ( knob_level_i[TREM_DEPTH]    ),
+        .enable_i             ( left_button_effects         ),
+        .data_i               ( data_from_reverb            ),
+        .data_o               ( data_from_tremolo           )
+      );
+
+    end // gen_tremolo
+  else
+    begin : no_tremolo
+      assign data_from_tremolo = data_from_reverb;
+    end // no_tremolo
+endgenerate
+
+
+
+assign data_o = data_from_tremolo;
 
 endmodule

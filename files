@@ -30,9 +30,17 @@ rtl/delay_reflections_pipeline.sv
 
 rtl/fir_filter/ram.sv
 rtl/fir_filter/ram_fir.sv
-rtl/fir_filter/rom.sv
 
-rtl/sat_sum.sv
+rtl/tremolo/src/biased_bitstream_generator.sv
+rtl/tremolo/src/cordic.sv
+rtl/tremolo/src/frequency_control.sv
+rtl/tremolo/src/rom.sv
+rtl/tremolo/src/rotator.sv
+rtl/tremolo/src/sine_generator.sv
+rtl/tremolo/src/tremolo.sv
+
+
+rtl/sum_sat.sv
 rtl/chorus.sv
 rtl/swell.sv
 rtl/sin_generator.sv

@@ -43,6 +43,7 @@ parameter DRIVE_EN          = 0;
 parameter CHORUS_EN         = 1;
 parameter DELAY_EN          = 1;
 parameter REVERB_EN         = 0;
+parameter TREMOLO_EN        = 1;
 
 // Labels for knob assignments
 parameter  DEL_LEVEL = 0;
@@ -51,8 +52,8 @@ parameter  DEL_TIME  = 2;
 parameter  REV_DECAY = 3;
 parameter  CHORUS    = 4;
 parameter  SWELL     = 5;
-parameter  DRIVE     = 6;
-parameter  UNUSED    = 7;
+parameter  TREM_SPEED = 6;
+parameter  TREM_DEPTH = 7;
 
 
 // labels for external memory interface assignments
