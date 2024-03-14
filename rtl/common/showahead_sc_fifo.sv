@@ -70,7 +70,7 @@ generate
   case( RAMSTYLE )
     "REGISTERS" :
       begin : dedicated_regs
-        logic [2**AWIDTH-1:0][DWIDTH-1:0] mem /* synthesis syn_ramstyle = "registers" */ ;
+        logic [2**AWIDTH-1:0][DWIDTH-1:0] mem /* synthesis ramstyle = "logic" */ ;
 
         always_ff @( posedge clk_i )
           if( srst_i )
@@ -83,7 +83,7 @@ generate
       end // dedicated_regs
     "BRAM" :
       begin : dedicated_bram
-        logic [DWIDTH-1:0] mem [2**AWIDTH-1:0]/* synthesis syn_ramstyle="block_ram"*/;
+        logic [DWIDTH-1:0] mem [2**AWIDTH-1:0] /* synthesis ramstyle="M9K" */;
 
         always_ff @( posedge clk_i )
           if( wr_req )

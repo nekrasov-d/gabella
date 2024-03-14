@@ -33,8 +33,6 @@ print_purple () {
   echo -e "\e[01;35m$1\e[0m"
 }
 
-
-
 while read line
 do
   case $line in
@@ -42,8 +40,19 @@ do
     *"created implicit net"*   ) print_red    "$line" && error=2;;
     *"inferring latch"*        ) print_red    "$line" && error=3;;
     "Critical Warning"*        ) print_purple "$line";;
+    *\(14284\):*               ) print_purple "$line";; # Synthesizing away. Might be ok though
 
+    # Useless INFO messages like "Elaborating entity ...."
     *\(10665\):*               ) ;;
+    *\(12128\):*               ) ;;
+    *\(12021\):*               ) ;;
+    *\(12022\):*               ) ;;
+    *\(12023\):*               ) ;;
+    *\(12134\):*               ) ;; # Parameter assignments
+    *\(18236\):*               ) ;; # Number of processors has not been specified...
+    *\(169178\):*              ) ;; # Pin electrical standard info
+    *\(176120\):*              ) ;; # ???
+    *\(176121\):*              ) ;; # ???
 
     Warning:* | Warning\ \(*   ) print_yellow "$line";;
     Info:*    | Info\ \(*      ) print_blue   "$line";;
