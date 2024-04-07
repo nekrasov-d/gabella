@@ -1,6 +1,3 @@
-[submodule "rtl/fir_filter"]
-	path = rtl/fir_filter
-	url = https://github.com/nekrasov-d/ram-fir-fpga.git
 [submodule "rtl/tremolo"]
 	path = rtl/tremolo
 	url = https://github.com/nekrasov-d/tremolo-fpga.git
