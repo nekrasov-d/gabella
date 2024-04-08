@@ -12,7 +12,7 @@ each module. It's not a problem since they're mutually independet in general
 LICENSE
 =======
 
-WTFPL 2.0
+MIT
 
 AUTHORS
 =======
