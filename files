@@ -8,9 +8,12 @@ rtl/common/design_interfaces.sv
 rtl/common/showahead_sc_fifo.sv
 rtl/common/sum_sat.sv
 
-rtl/fir_filter/ram_fir.sv
-rtl/fir_filter/ram.sv
-rtl/fir_filter/rom.sv
+rtl/filters/rtl/rom.sv
+rtl/filters/rtl/ram.sv
+rtl/filters/rtl/sat.sv
+rtl/filters/rtl/ram_fir.sv
+rtl/filters/rtl/looped_sos_iir.sv
+rtl/filters/rtl/iir.sv
 
 rtl/other_effects/attenuator.sv
 rtl/other_effects/chorus.sv
@@ -46,7 +49,7 @@ rtl/secondary_logic/pll/sys_pll.v
 rtl/tremolo/src/biased_bitstream_generator.sv
 rtl/tremolo/src/cordic.sv
 rtl/tremolo/src/frequency_control.sv
-# rtl/tremolo/src/rom.sv
+rtl/tremolo/src/rom.sv
 rtl/tremolo/src/rotator.sv
 rtl/tremolo/src/sine_generator.sv
 rtl/tremolo/src/tremolo.sv

@@ -1,5 +1,4 @@
-#!bin/bash
-#
+#!/bin/bash
 # MIT License
 #
 # Copyright (c) 2024 Dmitriy Nekrasov
