@@ -1,6 +1,3 @@
-[submodule "rtl/tremolo"]
-	path = rtl/tremolo
-	url = https://github.com/nekrasov-d/tremolo-fpga.git
 [submodule "rtl/filters"]
 	path = rtl/filters
 	url = git@github.com:nekrasov-d/digital-filters.git
