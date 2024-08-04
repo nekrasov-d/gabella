@@ -1,3 +1,12 @@
 [submodule "rtl/filters"]
 	path = rtl/filters
-	url = git@github.com:nekrasov-d/digital-filters.git
+        url = git@github.com:nekrasov-d/digital-filters.git
+        btanch = gabella
+[submodule "rtl/cordic_based_math"]
+	path = rtl/cordic_based_math
+        url = git@github.com:nekrasov-d/cordic-based-math.git
+        branch = gabella
+[submodule "rtl/sdft"]
+	path = rtl/sdft
+        url = git@github.com:nekrasov-d/sdft.git
+        branch = gabella
