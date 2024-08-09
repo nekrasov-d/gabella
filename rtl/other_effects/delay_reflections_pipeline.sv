@@ -75,17 +75,19 @@ attenuator #(
 generate
   if( FILTER_EN )
     begin : gen_filter
-      primitive_lowpass_filter #(
-        .DWIDTH              ( DWIDTH                      ),
+      logic [DWIDTH-1:0] data_from_filter;
+
+      boxcar_filter #(
+        .DW                  ( DWIDTH                      ),
         .DEPTH               ( FILTER_DEPTH                )
       ) filter (
         .clk_i               ( clk_i                       ),
         .srst_i              ( srst_i                      ),
         .sample_tick_i       ( sample_tick_i               ),
-        .enable_i            ( filter_en_i                 ),
         .data_i              ( data_from_attenuator        ),
-        .data_o              ( data_o                      )
+        .data_o              ( data_from_filter            )
       );
+      assign data_o = filter_en_i ? data_from_filter : data_from_attenuator;
     end // gen_filter
   else
     begin : no_filter
