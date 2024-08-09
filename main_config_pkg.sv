@@ -28,7 +28,6 @@
  * -- Dmitry Nekrasov <bluebag@yandex.ru>   Mon, 08 Apr 2024 08:50:31 +0300
  */
 
-
 package main_config;
 
 parameter DATA_WIDTH_24_EN = 1;
@@ -41,10 +40,12 @@ parameter STARTUP_MUSIC_EN = 0;
 
 parameter NOISEGATE_THRESHOLD = 300;
 
+parameter FM_DOWNSAMPLER_INIT_FILE = "rtl/frequency_machine/init/2500_hz_antialiasing_fir.mem";
+
 //***********************************************************
 // MEMORY
 
-parameter NUM_MEMORY_MASTERS = 16;
+parameter NUM_MEMORY_MASTERS    = 16;
 parameter NUM_MEMORY_INTERFACES = DATA_WIDTH_24_EN ? NUM_MEMORY_MASTERS / 2 :
                                                      NUM_MEMORY_MASTERS;
 
@@ -59,20 +60,30 @@ parameter DELAY_IF = 0;
 // Application core
 
 // application core parts static on/off
-parameter DUT_EN       = 0;
-parameter NOISEGATE_EN = 0;
-parameter CHORUS_EN    = 1;
-parameter DELAY_EN     = 0;
-parameter TREMOLO_EN   = 1;
+parameter DUT_EN                          = 0;
+parameter WEIRD_MICRO_DELAY_EN            = 1;
+parameter WEIRD_FD_SOUNS1_EN              = 1;
+parameter WEIRD_FD_SOUNS2_EN              = 0;
+parameter NOISEGATE_EN                    = 0; // Not implemented yet
+parameter CHORUS_EN                       = 1;
+parameter DELAY_EN                        = 0; // SDRAM is broken!
+parameter TREMOLO_EN                      = 0;
 
 // Labels for knob assignments
 parameter  DEL_LEVEL  = 0;
-parameter  REV_MIX    = 1;
+parameter  WFDS1      = 1;
 parameter  DEL_TIME   = 2;
-parameter  REV_DECAY  = 3;
+parameter  WFDS2      = 3;
 parameter  CHORUS     = 4;
 parameter  SWELL      = 5;
 parameter  TREM_SPEED = 6;
 parameter  TREM_DEPTH = 7;
+
+// Chorus
+// It was just a random tryout, and I found these values by luck.
+// This two-voice reverb with these parameters souds actually good
+parameter       CHORUS_MAX_TIME = 'h530;
+parameter       CHORUS_MIN_TIME = 'h370;
+parameter [7:0] CHORUS_DEPTH    = 8'h80;
 
 endpackage

@@ -8,6 +8,7 @@ rtl/common/design_interfaces.sv
 rtl/common/showahead_sc_fifo.sv
 rtl/common/sum_sat.sv
 
+rtl/filters/rtl/boxcar_filter.sv
 rtl/filters/rtl/rom.sv
 rtl/filters/rtl/ram.sv
 rtl/filters/rtl/sat.sv
@@ -20,7 +21,6 @@ rtl/other_effects/chorus.sv
 rtl/other_effects/crossfader.sv
 rtl/other_effects/delay_reflections_pipeline.sv
 rtl/other_effects/delay.sv
-rtl/other_effects/primitive_lowpass_filter.sv
 rtl/other_effects/design_under_test.sv
 
 rtl/secondary_logic/i2s_receiver.sv
@@ -46,13 +46,39 @@ rtl/secondary_logic/pll/sdram_pll.v
 rtl/secondary_logic/pll/i2s_pll.v
 rtl/secondary_logic/pll/sys_pll.v
 
-rtl/tremolo/src/biased_bitstream_generator.sv
-rtl/tremolo/src/cordic.sv
-rtl/tremolo/src/frequency_control.sv
-rtl/tremolo/src/rom.sv
-rtl/tremolo/src/rotator.sv
-rtl/tremolo/src/sine_generator.sv
-rtl/tremolo/src/tremolo.sv
+#rtl/tremolo/src/biased_bitstream_generator.sv
+#rtl/tremolo/src/cordic.sv
+#rtl/tremolo/src/frequency_control.sv
+#rtl/tremolo/src/rom.sv
+#rtl/tremolo/src/rotator.sv
+#rtl/tremolo/src/sine_generator.sv
+#rtl/tremolo/src/tremolo.sv
+
+rtl/sdft/rtl/hanning_fd.sv
+rtl/sdft/rtl/ram.sv
+rtl/sdft/rtl/rom.sv
+rtl/sdft/rtl/rotator.sv
+rtl/sdft/rtl/sat.sv
+rtl/sdft/rtl/adjust_bitwidth.sv
+rtl/sdft/rtl/sdft_default.sv
+rtl/sdft/rtl/sdft_rl.sv
+rtl/sdft/rtl/sdft.sv
+rtl/sdft/rtl/ssidft.sv
+
+rtl/cordic_based_math/rtl/cordic_step.sv
+rtl/cordic_based_math/rtl/sincos.sv
+rtl/cordic_based_math/rtl/vectoring.sv
+
+rtl/frequency_machine/twiddle_generator_16b.sv
+rtl/frequency_machine/twiddle_generator_18b.sv
+rtl/frequency_machine/vectoring_18b.sv
+rtl/frequency_machine/silence_detector.sv
+rtl/frequency_machine/downsampler.sv
+rtl/frequency_machine/shared_oscillator_accumulator.sv
+rtl/frequency_machine/soa.sv
+rtl/frequency_machine/fd_gain_control.sv
+rtl/frequency_machine/fd_processor.sv
+rtl/frequency_machine/frequency_machine.sv
 
 rtl/audio_engine.sv
 rtl/pedalboard.sv
