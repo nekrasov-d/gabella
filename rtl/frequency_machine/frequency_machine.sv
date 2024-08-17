@@ -190,7 +190,7 @@ fd_processor #(
   .sob_i                   ( sob_d                       ),
   .eob_i                   ( eob_d                       ),
   .freq_i                  ( freq_abs                    ),
-  .sustain_i               ( level_i                     ),
+  .sustain_i               (                             ),
   .sample_o                ( data_recovered_oscillator   ),
   .alarm_o                 ( sat_alarm_2_o               )
 );
