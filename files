@@ -46,13 +46,11 @@ rtl/secondary_logic/pll/sdram_pll.v
 rtl/secondary_logic/pll/i2s_pll.v
 rtl/secondary_logic/pll/sys_pll.v
 
-#rtl/tremolo/src/biased_bitstream_generator.sv
-#rtl/tremolo/src/cordic.sv
-#rtl/tremolo/src/frequency_control.sv
-#rtl/tremolo/src/rom.sv
-#rtl/tremolo/src/rotator.sv
-#rtl/tremolo/src/sine_generator.sv
-#rtl/tremolo/src/tremolo.sv
+rtl/tremolo/src/biased_bitstream_generator.sv
+rtl/tremolo/src/frequency_control.sv
+rtl/tremolo/src/modulator.sv
+rtl/tremolo/src/rom.sv
+rtl/tremolo/src/tremolo.sv
 
 rtl/sdft/rtl/hanning_fd.sv
 rtl/sdft/rtl/ram.sv

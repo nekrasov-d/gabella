@@ -42,6 +42,8 @@ parameter NOISEGATE_THRESHOLD = 300;
 
 parameter FM_DOWNSAMPLER_INIT_FILE = "rtl/frequency_machine/init/2500_hz_antialiasing_fir.mem";
 
+parameter TREM_FREQ_TABLE_FILE =  "rtl/tremolo/tremolo_frequency_table.mem";
+
 //***********************************************************
 // MEMORY
 
@@ -60,14 +62,14 @@ parameter DELAY_IF = 0;
 // Application core
 
 // application core parts static on/off
-parameter DUT_EN                          = 0;
-parameter WEIRD_MICRO_DELAY_EN            = 1;
-parameter WEIRD_FD_SOUNS1_EN              = 1;
-parameter WEIRD_FD_SOUNS2_EN              = 0;
-parameter NOISEGATE_EN                    = 0; // Not implemented yet
-parameter CHORUS_EN                       = 1;
-parameter DELAY_EN                        = 0; // SDRAM is broken!
-parameter TREMOLO_EN                      = 0;
+parameter DUT_EN               = 0;
+parameter WEIRD_MICRO_DELAY_EN = 1;
+parameter WEIRD_FD_SOUNS1_EN   = 1;
+parameter WEIRD_FD_SOUNS2_EN   = 0;
+parameter NOISEGATE_EN         = 0; // Not implemented yet
+parameter CHORUS_EN            = 1;
+parameter DELAY_EN             = 0; // SDRAM is broken!
+parameter TREMOLO_EN           = 1;
 
 // Labels for knob assignments
 parameter  DEL_LEVEL  = 0;
@@ -75,7 +77,7 @@ parameter  WFDS1      = 1;
 parameter  DEL_TIME   = 2;
 parameter  WFDS2      = 3;
 parameter  CHORUS     = 4;
-parameter  SWELL      = 5;
+parameter  SWELL      = 5; // There is no "swell" feature in this project anymore
 parameter  TREM_SPEED = 6;
 parameter  TREM_DEPTH = 7;
 
