@@ -32,61 +32,45 @@
 */
 
 module frequency_control #(
-  parameter FREQ_TABLE_FILE = "",
-  // 1            = no division
-  // 2 and more   = division by 2**(FREQ_TABLE_FILE-1)
-  parameter FREQ_DIVISOR_FACTOR = 1
+  parameter                   PERIOD_BITWIDTH = 18
 ) (
-  input        clk_i,
-  input        srst_i,
-  input        sample_tick_i,
-  input [7:0]  frequency_number_i,
-  output logic angle_incr_en_o
+  input                       clk_i,
+  input                       srst_i,
+  input                       sample_tick_i,
+  input [PERIOD_BITWIDTH-1:0] required_period_in_samples_i,
+  output logic                angle_incr_en_o
 );
 
 localparam RESOLUTION = 2**16;
 localparam BITWIDTH   = 16;
 
 logic [BITWIDTH:0] angle_increment_probability;
-logic generate_bit_en;
 
-// Nested declaration
-//`include "rom.sv"
+// 2**27 becase RESOLUTION is 2**16 and the amount of samples in one
+// cordic round trip (when increment probability is 1) is 2*11.
+// 11 + 16 = 27
+localparam MAX_VAL = 2**27;
+localparam NBITS   = 28;
 
-rom_tremolo #(
-  .DWIDTH       ( BITWIDTH+1                  ),
-  .AWIDTH       ( 8                           ),
-  .INIT_FILE    ( FREQ_TABLE_FILE             )
-) frequency_table (
-  .clk_i        ( clk_i                       ),
-  .rdaddr_i     ( frequency_number_i          ),
-  .rddata_o     ( angle_increment_probability )
+divider #(
+  .MAX_VAL        ( MAX_VAL                      ),
+  .NBITS          ( NBITS                        )
+) DUT (
+  .clk_i          ( clk_i                        ),
+  .srst_i         ( srst_i                       ),
+  .valid_i        ( 1'b1                         ),
+  .numerator_i    ( 2**27                        ),
+  .denominator_i  ( required_period_in_samples_i ),
+  .quotient_o     ( angle_increment_probability  ),
+  .remainder_o    (                              )
 );
 
-generate
-  if( FREQ_DIVISOR_FACTOR==1 )
-    assign generate_bit_en = sample_tick_i;
-  else
-    begin
-      logic [FREQ_DIVISOR_FACTOR-1:0] counter;
-      always_ff @( posedge clk_i )
-        if( srst_i )
-          counter <= '0;
-        else
-          if( sample_tick_i )
-            counter <= counter + 1'b1;
-
-      assign generate_bit_en = counter[FREQ_DIVISOR_FACTOR-1] && sample_tick_i;
-    end
-endgenerate
-
-
 biased_bitstream_generator #(
-  .TOKENS_FOR_1          ( 2**RESOLUTION               )
+  .TOKENS_FOR_1          ( RESOLUTION                  )
 ) bbg (
   .clk_i                 ( clk_i                       ),
   .srst_i                ( srst_i                      ),
-  .generate_bit_i        ( generate_bit_en           ),
+  .generate_bit_i        ( sample_tick_i               ),
   .probability_of_1_i    ( angle_increment_probability ),
   .output_bit_o          ( angle_incr_en_o             )
 );

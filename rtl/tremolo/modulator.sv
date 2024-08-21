@@ -31,31 +31,27 @@
 */
 
 module modulation #(
-  parameter FREQ_TABLE_FILE = "",
-  // 1            = no division
-  // 2 and more   = division by 2**(FREQ_TABLE_FILE-1)
-  parameter FREQ_DIVISOR_FACTOR = 1
-  ) (
-  input              clk_i,
-  input              srst_i,
-  input              sample_tick_i,
-  input        [7:0] frequency_number_i,
-  output logic [8:0] modulator_o
+  parameter                   PERIOD_BITWIDTH = 18
+) (
+  input                       clk_i,
+  input                       srst_i,
+  input                       sample_tick_i,
+  input [PERIOD_BITWIDTH-1:0] required_period_in_samples_i,
+  output logic                beat_o,
+  output logic [8:0]          modulator_o
 );
 
-logic        [10:0] angle;
+logic        [10:0] angle /* synthesis keep */;
 logic signed [8:0]  sine_signed;
 logic               angle_incr_en;
+logic               beat_nmask;
 
-frequency_control #(
-  .FREQ_TABLE_FILE     ( FREQ_TABLE_FILE     ),
-  .FREQ_DIVISOR_FACTOR ( FREQ_DIVISOR_FACTOR )
-) fc (
-  .clk_i               ( clk_i               ),
-  .srst_i              ( srst_i              ),
-  .sample_tick_i       ( sample_tick_i       ),
-  .frequency_number_i  ( frequency_number_i  ),
-  .angle_incr_en_o     ( angle_incr_en       )
+frequency_control fc (
+  .clk_i                        ( clk_i                        ),
+  .srst_i                       ( srst_i                       ),
+  .sample_tick_i                ( sample_tick_i                ),
+  .required_period_in_samples_i ( required_period_in_samples_i ),
+  .angle_incr_en_o              ( angle_incr_en                )
 );
 
 always_ff @( posedge clk_i )
@@ -77,7 +73,7 @@ sincos #(
   .K                ( 311                         ),
   // Such small cordic wouldnt require pipelining on 25 MHz
   .CORDIC_PIPELINE  ( "none"                      ),
-  .OUTPUT_REG_EN    ( 0                           )
+  .OUTPUT_REG_EN    ( 1                           )
 ) cordic_core (
   .clk_i            ( clk_i                       ),
   .valid_i          ( 1'b1                        ),
@@ -92,6 +88,18 @@ sincos #(
 // Scale up to unsigned values
 always_ff @( posedge clk_i )
   modulator_o <= { sine_signed[8]^1'b1, sine_signed[7:0] };
+
+assign beat_o = sample_tick_i && ( angle == { 2'b10, 9'b000000000 } ) && !beat_nmask;
+
+always_ff @( posedge clk_i )
+  if( srst_i )
+    beat_nmask <= 1'b0;
+  else
+    if( beat_o )
+      beat_nmask <= 1'b1;
+    else
+      if( angle != { 2'b10, 9'b000000000 } )
+        beat_nmask <= 1'b0;
 
 endmodule
 

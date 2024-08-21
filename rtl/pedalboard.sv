@@ -91,36 +91,39 @@ led_controller led_ctrl (
 assign dbg_leds_o          = 8'd0;
 assign din_dout_shortcut_o = 1'b0;
 
+//*****************************************************************************
+//******************************** TAP TEMPO **********************************
 
-//localparam TD_MIN_TIME = 400; // in samples
-//localparam TD_MAX_TIME = 100_000; // in samples
-//localparam TD_TIME_WIDTH = $clog2(TD_MAX_TIME);
-//logic [TD_TIME_WIDTH-1:0] td_time;
-//logic                     td_time_valid_stb;
-//
-//logic side_toggle_d;
-//logic st_posedge;
-//logic st_either_edge;
-//
-//always_ff @( posedge clk_i )
-//  side_toggle_d <= side_toggle;
-//
-//assign st_posedge     = side_toggle & !side_toggle_d;
-//assign st_either_edge = side_toggle ^ side_toggle_d;
-//
-//
-//time_detector #(
-//  .TD_MAX_TIME        ( TD_MAX_TIME                 ),
-//  .TD_MIN_TIME        ( TD_MIN_TIME                 ),
-//  .DW                 ( DW                          ),
-//) (
-//  .clk_i              ( clk_i                       ),
-//  .sample_tick_i      ( sample_tick_i               ),
-//  .trigger_i          ( st_either_edge              ),
-//  .detected_time_o    ( td_time                     ),
-//  .valid_stb_o        ( td_time_valid_stb           ),
-//);
+// Can be used for different effects, delay, tremolo, etc
 
+localparam TD_MIN_TIME      = 2048;  // in samples
+localparam TD_MAX_TIME      = 88200; // in samples
+localparam TD_TIME_BITWIDTH = $clog2(TD_MAX_TIME);
+logic [TD_TIME_BITWIDTH-1:0] td_time;
+logic                        td_time_valid_stb;
+
+logic side_toggle_d;
+logic st_posedge;
+logic st_either_edge;
+
+always_ff @( posedge clk_i )
+  side_toggle_d <= side_toggle;
+
+assign st_posedge     = side_toggle & !side_toggle_d;
+assign st_either_edge = side_toggle ^ side_toggle_d;
+
+time_detector #(
+  .TD_MAX_TIME        ( TD_MAX_TIME                 ),
+  .TD_MIN_TIME        ( TD_MIN_TIME                 ),
+  .DW                 ( TD_TIME_BITWIDTH            )
+) td (
+  .clk_i              ( clk_i                       ),
+  .srst_i             ( srst_i                      ),
+  .sample_tick_i      ( sample_tick_i               ),
+  .trigger_i          ( st_either_edge              ),
+  .detected_time_o    ( td_time                     ),
+  .valid_stb_o        ( td_time_valid_stb           )
+);
 
 //*****************************************************************************
 //******************************* PEDALBOARD **********************************
@@ -209,7 +212,7 @@ generate
         .mix_i                 ( knob_level_i[WFDS1]         ),
         .enable_i              ( right_button_effects        ),
         .bypass_dft_i          (                             ),
-        .side_toggle_i         ( side_toggle                 ),
+        .side_toggle_i         ( 1'b0                        ),
         .data_i                ( data_from_wmd               ),
         .data_o                ( data_from_wfds1             ),
         .sat_alarm_1_o         (                             ),
@@ -239,7 +242,7 @@ generate
         .mix_i                 ( knob_level_i[WFDS2]         ),
         .enable_i              ( right_button_effects        ),
         .bypass_dft_i          (                             ),
-        .side_toggle_i         ( side_toggle                 ),
+        .side_toggle_i         ( 1'b0                        ),
         .data_i                ( data_from_wfds1             ),
         .data_o                ( data_from_wfds2             ),
         .sat_alarm_1_o         (                             ),
@@ -354,14 +357,20 @@ generate
     begin : gen_tremolo
       tremolo #(
         .DW                   ( DATA_WIDTH                         ),
-        .FREQ_TABLE_FILE      ( main_config::TREM_FREQ_TABLE_FILE  ),
-        .FREQ_DIVISOR_FACTOR  ( 2                                  )
+        .TD_MAX_TIME          ( TD_MAX_TIME                        ),
+        .TD_MIN_TIME          ( TD_MIN_TIME                        ),
+        .TD_TIME_BITWIDTH     ( TD_TIME_BITWIDTH                   )
       ) trem (
         .clk_i                ( clk_i                              ),
         .srst_i               ( srst_i                             ),
         .sample_tick_i        ( sample_tick_i                      ),
-        .frequency_number_i   ( knob_level_i[TREM_SPEED]           ),
+        // Tap tempo frequency control
+        .td_time_i            ( td_time                            ),
+        .td_time_change_i     ( td_time_valid_stb                  ),
+        // Knob control
+        .knob_time_i          ( knob_level_i[TREM_SPEED]           ),
         .level_i              ( knob_level_i[TREM_DEPTH]           ),
+        .mode_i               ( knob_level_i[TREM_MODE]            ),
         .enable_i             ( left_button_effects                ),
         .data_i               ( data_from_delay                    ),
         .data_o               ( data_from_tremolo                  )

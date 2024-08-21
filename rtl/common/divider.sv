@@ -23,16 +23,13 @@
  *
  * ---------------------------------------------------------------------------------
  *
- * Variable x variable divider. The idea was picked in the "Advanced Synthesis
+ * Unsigned var/var divider. The idea was picked in the "Advanced Synthesis
  * Cookbook" by Altera (v11.0 2011). Unlike a pipelined one which can receive 1
  * value pair by clock cycle, this one locks in a busy state for NBITS cycles.
  * I wanted to keep the interface just as simple as I needed. So there's no
  * precise 'valid' indication and backpressure. It is supposed that numerator
  * and denominator change rather slowly, and the module just quietly follows
  * these changes, updating output values after NBITS tacts
- *
- * XXX: for some reason, remainder_o output seems wrong. I don't need it now,
- *      so I just left it like this.
  *
  * XXX: verification was too cursory
  *
@@ -41,9 +38,12 @@
 
 `define sign(X) X[$bits(X)-1]
 
+
 module divider #(
-  parameter int MAX_VAL = 32,
-  parameter int NBITS   = $onehot( MAX_VAL ) ? $clog2(MAX_VAL) + 1 : $clog2(MAX_VAL)
+  parameter MAX_VAL = 32,
+  parameter NBITS   = 0 // XXX : Quartis does not support $onehot() (FUCK!!!! WHY????),
+                        // so you have to calculate it outside
+  //parameter int NBITS   = $onehot( MAX_VAL ) ? $clog2(MAX_VAL) + 1 : $clog2(MAX_VAL)
 ) (
   input                    clk_i,
   input                    srst_i,
@@ -117,7 +117,7 @@ always_ff @( posedge clk_i )
   if( done )
     begin
       quotient_o  <= quotient;
-      remainder_o <= workspace;
+      remainder_o <= workspace >> 1;
     end
 
 endmodule

@@ -7,6 +7,7 @@ rtl/common/avalon_mm_if.sv
 rtl/common/design_interfaces.sv
 rtl/common/showahead_sc_fifo.sv
 rtl/common/sum_sat.sv
+rtl/common/divider.sv
 
 rtl/filters/rtl/boxcar_filter.sv
 rtl/filters/rtl/rom.sv
@@ -22,6 +23,7 @@ rtl/other_effects/crossfader.sv
 rtl/other_effects/delay_reflections_pipeline.sv
 rtl/other_effects/delay.sv
 rtl/other_effects/design_under_test.sv
+rtl/other_effects/time_detector.sv
 
 rtl/secondary_logic/i2s_receiver.sv
 rtl/secondary_logic/i2s_transmitter.sv
@@ -46,11 +48,10 @@ rtl/secondary_logic/pll/sdram_pll.v
 rtl/secondary_logic/pll/i2s_pll.v
 rtl/secondary_logic/pll/sys_pll.v
 
-rtl/tremolo/src/biased_bitstream_generator.sv
-rtl/tremolo/src/frequency_control.sv
-rtl/tremolo/src/modulator.sv
-rtl/tremolo/src/rom.sv
-rtl/tremolo/src/tremolo.sv
+rtl/tremolo/biased_bitstream_generator.sv
+rtl/tremolo/frequency_control.sv
+rtl/tremolo/modulator.sv
+rtl/tremolo/tremolo.sv
 
 rtl/sdft/rtl/hanning_fd.sv
 rtl/sdft/rtl/ram.sv
@@ -73,7 +74,6 @@ rtl/frequency_machine/vectoring_18b.sv
 rtl/frequency_machine/silence_detector.sv
 rtl/frequency_machine/downsampler.sv
 rtl/frequency_machine/shared_oscillator_accumulator.sv
-rtl/frequency_machine/soa.sv
 rtl/frequency_machine/fd_gain_control.sv
 rtl/frequency_machine/fd_processor.sv
 rtl/frequency_machine/frequency_machine.sv

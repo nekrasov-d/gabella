@@ -42,8 +42,6 @@ parameter NOISEGATE_THRESHOLD = 300;
 
 parameter FM_DOWNSAMPLER_INIT_FILE = "rtl/frequency_machine/init/2500_hz_antialiasing_fir.mem";
 
-parameter TREM_FREQ_TABLE_FILE =  "rtl/tremolo/tremolo_frequency_table.mem";
-
 //***********************************************************
 // MEMORY
 
@@ -77,7 +75,7 @@ parameter  WFDS1      = 1;
 parameter  DEL_TIME   = 2;
 parameter  WFDS2      = 3;
 parameter  CHORUS     = 4;
-parameter  SWELL      = 5; // There is no "swell" feature in this project anymore
+parameter  TREM_MODE  = 5;
 parameter  TREM_SPEED = 6;
 parameter  TREM_DEPTH = 7;
 
